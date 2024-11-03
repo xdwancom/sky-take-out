@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Accessors(chain = true)//Lombok生成带有return this的setter 方法，从而支持链式调用
 public class Employee implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -20,9 +22,9 @@ public class Employee implements Serializable {
 
     private String username;
 
-    private String name;
-
     private String password;
+
+    private String name;
 
     private String phone;
 
