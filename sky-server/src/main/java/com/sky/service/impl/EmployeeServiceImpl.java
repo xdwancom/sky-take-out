@@ -3,7 +3,6 @@ package com.sky.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
@@ -25,7 +24,7 @@ import org.springframework.util.DigestUtils;
 import java.time.LocalDateTime;
 
 @Service
-public class EmployeeServiceImpl implements EmployeeService {
+    public class EmployeeServiceImpl implements EmployeeService {
 
     @Autowired
     private EmployeeMapper employeeMapper;
@@ -38,8 +37,7 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     public Employee login(EmployeeLoginDTO employeeLoginDTO) {
         String username = employeeLoginDTO.getUsername();
-        String password = employeeLoginDTO.getPassword();
-        password = DigestUtils.md5DigestAsHex(password.getBytes());//md5加密
+        String password = DigestUtils.md5DigestAsHex(employeeLoginDTO.getPassword().getBytes());//md5加密
         Employee employee = employeeMapper.selectOne(new QueryWrapper<Employee>().eq("username",username));//根据用户名查询数据库
 
         if (employee == null)
@@ -58,15 +56,15 @@ public class EmployeeServiceImpl implements EmployeeService {
      * @param employeeDTO
      */
     public void save(EmployeeDTO employeeDTO) {
-        Employee employee = new Employee();
+        Employee employee = Employee.builder()
+                .status(StatusConstant.ENABLE)//设置账号状态，默认1，1正常，0锁定
+                .password(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()))//设置密码，默认密码123456
+                .createTime(LocalDateTime.now())//设置当前记录的创建时间和修改时间
+                .updateTime(LocalDateTime.now())
+                .createUser(BaseContext.getCurrentId())//设置当前员工创建人id和修改人id
+                .updateUser(BaseContext.getCurrentId())
+                .build();
         BeanUtils.copyProperties(employeeDTO, employee);//对象属性拷贝
-
-        employee.setStatus(StatusConstant.ENABLE)//设置账号状态，默认1，1正常，0锁定
-            .setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()))//设置密码，默认密码123456
-            .setCreateTime(LocalDateTime.now())//设置当前记录的创建时间和修改时间
-            .setUpdateTime(LocalDateTime.now())
-            .setCreateUser(BaseContext.getCurrentId())//设置当前员工创建人id和修改人id
-            .setUpdateUser(BaseContext.getCurrentId());
 
         BaseContext.removeCurrentId();//清理ThreadLocal
         employeeMapper.insert(employee);
@@ -83,5 +81,39 @@ public class EmployeeServiceImpl implements EmployeeService {
         QueryWrapper<Employee> queryWrapper = new QueryWrapper<Employee>().like(employeePageQueryDTO.getName() != null, "name", employeePageQueryDTO.getName());//添加模糊查询条件
         IPage<Employee> result = employeeMapper.selectPage(page, queryWrapper);
         return new PageResult(result.getTotal(), result.getRecords());
+    }
+
+    /**
+     * 启用禁用员工账号
+     *
+     * @param status
+     * @param id
+     */
+    public void startOrStop(Integer status, Long id) {
+        employeeMapper.updateById(Employee.builder().status(status).id(id).build());
+    }
+
+    /**
+     * 根据id查询员工
+     *
+     * @param id
+     * @return
+     */
+    public Employee getById(Long id) {
+        return employeeMapper.selectById(id).setPassword("****");
+    }
+
+    /**
+     * 编辑员工信息
+     *
+     * @param employeeDTO
+     */
+    public void update(EmployeeDTO employeeDTO) {
+        Employee employee = Employee.builder()
+                .updateTime(LocalDateTime.now())
+                .updateUser(BaseContext.getCurrentId())
+                .build();
+        BeanUtils.copyProperties(employeeDTO, employee);
+        employeeMapper.updateById(employee);
     }
 }
