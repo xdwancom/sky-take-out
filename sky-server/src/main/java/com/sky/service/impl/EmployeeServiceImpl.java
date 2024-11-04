@@ -1,7 +1,9 @@
 package com.sky.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.github.pagehelper.PageHelper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
@@ -20,7 +22,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
-
 import java.time.LocalDateTime;
 
 @Service
@@ -72,16 +73,15 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     /**
-     * 分页查询
+     * mp分页查询
      *
      * @param employeePageQueryDTO
      * @return
      */
     public PageResult pageQuery(EmployeePageQueryDTO employeePageQueryDTO) {
-        // select * from employee limit 0,10
-        //开始分页查询
-        PageHelper.startPage(employeePageQueryDTO.getPage(), employeePageQueryDTO.getPageSize());
-
-        return null;
+        IPage<Employee> page = new Page<>(employeePageQueryDTO.getPage(), employeePageQueryDTO.getPageSize());//创建分页对象
+        QueryWrapper<Employee> queryWrapper = new QueryWrapper<Employee>().like(employeePageQueryDTO.getName() != null, "name", employeePageQueryDTO.getName());//添加模糊查询条件
+        IPage<Employee> result = employeeMapper.selectPage(page, queryWrapper);
+        return new PageResult(result.getTotal(), result.getRecords());
     }
 }
