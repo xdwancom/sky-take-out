@@ -44,10 +44,6 @@ public class CategoryServiceImpl implements CategoryService {
     public void save(CategoryDTO categoryDTO) {
         Category category = Category.builder()
                 .status(StatusConstant.DISABLE)
-                .createTime(LocalDateTime.now())//设置创建时间和修改时间
-                .updateTime(LocalDateTime.now())
-                .createUser(BaseContext.getCurrentId())//设置创建人id和修改人id
-                .updateUser(BaseContext.getCurrentId())
                 .build();
         BeanUtils.copyProperties(categoryDTO, category);
         categoryMapper.insert(category);
@@ -61,8 +57,8 @@ public class CategoryServiceImpl implements CategoryService {
     public PageResult pageQuery(CategoryPageQueryDTO categoryPageQueryDTO) {
         IPage<Category> page = new Page<>(categoryPageQueryDTO.getPage(), categoryPageQueryDTO.getPageSize());//创建分页对象
         QueryWrapper<Category> queryWrapper = new QueryWrapper<Category>().like(categoryPageQueryDTO.getName() != null, "name", categoryPageQueryDTO.getName());//添加模糊查询条件
-        IPage<Category> result = categoryMapper.selectPage(page, queryWrapper);
-        return new PageResult(result.getTotal(), result.getRecords());
+        IPage<Category> pageresult = categoryMapper.selectPage(page, queryWrapper);
+        return new PageResult(pageresult.getTotal(), pageresult.getRecords());
     }
 
     /**
@@ -85,10 +81,6 @@ public class CategoryServiceImpl implements CategoryService {
     public void update(CategoryDTO categoryDTO) {
         Category category = new Category();
         BeanUtils.copyProperties(categoryDTO,category);
-
-        //设置修改时间、修改人
-        category.setUpdateTime(LocalDateTime.now());
-        category.setUpdateUser(BaseContext.getCurrentId());
         categoryMapper.updateById(category);
     }
 

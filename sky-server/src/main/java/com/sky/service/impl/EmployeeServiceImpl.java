@@ -59,15 +59,11 @@ import java.time.LocalDateTime;
         Employee employee = Employee.builder()
                 .status(StatusConstant.ENABLE)//设置账号状态，默认1，1正常，0锁定
                 .password(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()))//设置密码，默认密码123456
-                .createTime(LocalDateTime.now())//设置当前记录的创建时间和修改时间
-                .updateTime(LocalDateTime.now())
-                .createUser(BaseContext.getCurrentId())//设置当前员工创建人id和修改人id
-                .updateUser(BaseContext.getCurrentId())
                 .build();
         BeanUtils.copyProperties(employeeDTO, employee);//对象属性拷贝
 
-        BaseContext.removeCurrentId();//清理ThreadLocal
         employeeMapper.insert(employee);
+        BaseContext.removeCurrentId();//清理ThreadLocal
     }
 
     /**
@@ -79,8 +75,8 @@ import java.time.LocalDateTime;
     public PageResult pageQuery(EmployeePageQueryDTO employeePageQueryDTO) {
         IPage<Employee> page = new Page<>(employeePageQueryDTO.getPage(), employeePageQueryDTO.getPageSize());//创建分页对象
         QueryWrapper<Employee> queryWrapper = new QueryWrapper<Employee>().like(employeePageQueryDTO.getName() != null, "name", employeePageQueryDTO.getName());//添加模糊查询条件
-        IPage<Employee> result = employeeMapper.selectPage(page, queryWrapper);
-        return new PageResult(result.getTotal(), result.getRecords());
+        IPage<Employee> pageresult = employeeMapper.selectPage(page, queryWrapper);
+        return new PageResult(pageresult.getTotal(), pageresult.getRecords());
     }
 
     /**
@@ -104,16 +100,15 @@ import java.time.LocalDateTime;
     }
 
     /**
-     * 编辑员工信息
+     * 修改员工
      *
      * @param employeeDTO
      */
     public void update(EmployeeDTO employeeDTO) {
         Employee employee = Employee.builder()
-                .updateTime(LocalDateTime.now())
-                .updateUser(BaseContext.getCurrentId())
                 .build();
         BeanUtils.copyProperties(employeeDTO, employee);
         employeeMapper.updateById(employee);
+        BaseContext.removeCurrentId();//清理ThreadLocal
     }
 }
