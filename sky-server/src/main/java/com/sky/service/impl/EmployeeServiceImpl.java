@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
-import com.sky.context.BaseContext;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.dto.EmployeePageQueryDTO;
@@ -21,7 +20,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
-import java.time.LocalDateTime;
 
 @Service
     public class EmployeeServiceImpl implements EmployeeService {
@@ -61,9 +59,7 @@ import java.time.LocalDateTime;
                 .password(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()))//设置密码，默认密码123456
                 .build();
         BeanUtils.copyProperties(employeeDTO, employee);//对象属性拷贝
-
         employeeMapper.insert(employee);
-        BaseContext.removeCurrentId();//清理ThreadLocal
     }
 
     /**
@@ -105,10 +101,8 @@ import java.time.LocalDateTime;
      * @param employeeDTO
      */
     public void update(EmployeeDTO employeeDTO) {
-        Employee employee = Employee.builder()
-                .build();
+        Employee employee = new Employee();
         BeanUtils.copyProperties(employeeDTO, employee);
         employeeMapper.updateById(employee);
-        BaseContext.removeCurrentId();//清理ThreadLocal
     }
 }
