@@ -94,13 +94,7 @@ public class CategoryServiceImpl implements CategoryService {
      * @param id
      */
     public void startOrStop(Integer status, Long id) {
-        Category category = Category.builder()
-                .id(id)
-                .status(status)
-                .updateTime(LocalDateTime.now())
-                .updateUser(BaseContext.getCurrentId())
-                .build();
-        categoryMapper.updateById(category);
+        categoryMapper.updateById(Category.builder().status(status).id(id).build());
     }
 
     /**
@@ -112,7 +106,8 @@ public class CategoryServiceImpl implements CategoryService {
         LambdaQueryWrapper<Category> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Category::getStatus, 1)
                     .eq(type != null,Category::getType, type)
-                    .orderByAsc(Category::getSort).orderByDesc(Category::getCreateTime);
+                    .orderByAsc(Category::getSort)
+                    .orderByDesc(Category::getCreateTime);
         return categoryMapper.selectList(queryWrapper);
     }
 }
