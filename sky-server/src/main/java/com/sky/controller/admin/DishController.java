@@ -1,5 +1,6 @@
 package com.sky.controller.admin;
 
+import com.sky.annotation.Log;
 import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
@@ -22,6 +23,7 @@ import java.util.Set;
 @RequestMapping("/admin/dish")
 @Api(tags = "菜品相关接口")
 @Slf4j
+@Log
 public class DishController {
 
     @Autowired

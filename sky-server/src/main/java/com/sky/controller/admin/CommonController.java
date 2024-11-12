@@ -1,5 +1,6 @@
 package com.sky.controller.admin;
 
+import com.sky.annotation.Log;
 import com.sky.constant.MessageConstant;
 import com.sky.result.Result;
 import com.sky.utils.AliOssUtil;
@@ -21,6 +22,7 @@ import java.util.UUID;
 @RequestMapping("/admin/common")
 @Api(tags = "通用接口")
 @Slf4j
+@Log
 public class CommonController {
 
     @Autowired

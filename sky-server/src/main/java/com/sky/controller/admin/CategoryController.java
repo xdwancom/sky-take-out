@@ -1,5 +1,6 @@
 package com.sky.controller.admin;
 
+import com.sky.annotation.Log;
 import com.sky.dto.CategoryDTO;
 import com.sky.dto.CategoryPageQueryDTO;
 import com.sky.entity.Category;
@@ -20,6 +21,7 @@ import java.util.List;
 @RequestMapping("/admin/category")
 @Api(tags = "分类接口")
 @Slf4j
+@Log
 public class CategoryController {
 
     @Autowired

@@ -1,5 +1,6 @@
 package com.sky.controller.admin;
 
+import com.sky.annotation.Log;
 import com.sky.constant.JwtClaimsConstant;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
@@ -27,6 +28,7 @@ import java.util.Map;
 @Slf4j
 @Api(tags = "员工接口")
 @RequestMapping("/admin/employee")
+@Log
 public class EmployeeController {
 
     @Autowired
