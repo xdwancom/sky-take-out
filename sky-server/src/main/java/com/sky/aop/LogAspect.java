@@ -32,7 +32,7 @@ public class LogAspect {
         operateLogMapper.create_table_operate_log();
 
         //获取请求头中的jwt令牌
-        String operateUser =  Long.toString(getCurrentId()); // 操作人ID - 当前登录员工ID
+        String operateUser = String.valueOf(getCurrentId()); // 操作人ID - 当前登录员工ID
         log.info("当前操作员工ID: {}", operateUser);
 
         LocalDateTime operateTime = LocalDateTime.now();
