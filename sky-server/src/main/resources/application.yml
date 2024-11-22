@@ -36,9 +36,17 @@ logging:
 
 sky:
   jwt:
-    # 设置jwt签名加密秘钥
+    # 设置员工jwt签名加密秘钥
     admin-secret-key: itcast
-    # 设置jwt过期时间
+    # 设置员工jwt过期时间
     admin-ttl: 720000000000
     # 设置前端传递过来的令牌名称
     admin-token-name: token
+    # 设置小程序用户jwt签名加密秘钥
+    user-secret-key: itheima
+    # 设置小程序用户过期时间
+    user-ttl: 720000000000
+    user-token-name: authentication
+  wechat:
+    appid: ${sky.wechat.appid}
+    secret: ${sky.wechat.secret}
