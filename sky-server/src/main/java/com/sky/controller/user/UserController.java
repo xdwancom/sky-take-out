@@ -1,5 +1,6 @@
 package com.sky.controller.user;
 
+import com.sky.annotation.Log;
 import com.sky.constant.JwtClaimsConstant;
 import com.sky.dto.UserLoginDTO;
 import com.sky.entity.User;
@@ -23,6 +24,7 @@ import java.util.Map;
 @RequestMapping("/user/user")
 @Api(tags = "C端用户相关接口")
 @Slf4j
+@Log
 public class UserController {
 
     @Autowired

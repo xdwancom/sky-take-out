@@ -1,5 +1,6 @@
 package com.sky.controller.user;
 
+import com.sky.annotation.Log;
 import com.sky.entity.Category;
 import com.sky.result.Result;
 import com.sky.service.CategoryService;
@@ -14,6 +15,7 @@ import java.util.List;
 @RestController("userCategoryController")
 @RequestMapping("/user/category")
 @Api(tags = "C端-分类接口")
+@Log
 public class CategoryController {
 
     @Autowired

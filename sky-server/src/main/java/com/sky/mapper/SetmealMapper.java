@@ -22,7 +22,7 @@ public interface SetmealMapper extends BaseMapper<Setmeal> {
      */
     Page<SetmealVO> pageQuery(SetmealPageQueryDTO setmealPageQueryDTO);
 
-    	/**
+    /**
      * 动态条件查询套餐
      * @param setmeal
      * @return
